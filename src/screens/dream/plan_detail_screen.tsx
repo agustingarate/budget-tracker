@@ -1,7 +1,7 @@
 import { View } from "react-native";
 
-function SignUpScreen() {
+function PlanDetailScreen() {
   return <View></View>;
 }
 
-export default SignUpScreen;
+export default PlanDetailScreen;
