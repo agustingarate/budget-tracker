@@ -14,6 +14,9 @@ import AddPlanScreen from "./src/screens/dream/add_plan.screen";
 import PlanDetailScreen from "./src/screens/dream/plan_detail_screen";
 import { HomeTabParamList, RootStackParamList } from "./src/navigation/types";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import * as SplashScreen from "expo-splash-screen";
+import { useFonts } from "expo-font";
+import { useEffect } from "react";
 
 export default function App() {
   const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -85,6 +88,23 @@ export default function App() {
         />
       </BottomTab.Navigator>
     );
+  }
+
+  const [loaded, error] = useFonts({
+    "Nunito-Bold": require("./assets/fonts/Nunito-Bold.ttf"),
+    "Nunito-Light": require("./assets/fonts/Nunito-Light.ttf"),
+    "Nunito-Medium": require("./assets/fonts/Nunito-Medium.ttf"),
+    "Nunito-Regular": require("./assets/fonts/Nunito-Regular.ttf"),
+  });
+
+  useEffect(() => {
+    if (loaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded, error]);
+
+  if (!loaded && !error) {
+    return null;
   }
 
   return (
