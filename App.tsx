@@ -8,15 +8,15 @@ import LoginScreen from "./src/screens/auth/login_screen";
 import SignUpScreen from "./src/screens/auth/sign_up_screen";
 import HomeScreen from "./src/screens/root/home/home_screen";
 import SearchScreen from "./src/screens/root/search/search_screen";
-import PlansListScreen from "./src/screens/dream/plans_list_screen";
 import SettingsScreen from "./src/screens/root/settings/settings_screen";
-import AddPlanScreen from "./src/screens/dream/add_plan.screen";
-import PlanDetailScreen from "./src/screens/dream/plan_detail_screen";
 import { HomeTabParamList, RootStackParamList } from "./src/navigation/types";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
 import { useEffect } from "react";
+import PlansListScreen from "./src/screens/plans/plans_list_screen";
+import PlanDetailScreen from "./src/screens/plans/plan_detail_screen";
+import AddPlanScreen from "./src/screens/plans/add_plan.screen";
 
 export default function App() {
   const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -110,6 +110,7 @@ export default function App() {
   return (
     <NavigationContainer>
       {/* <LoginNavigator /> */}
+      <StatusBar style="dark" />
 
       <Stack.Navigator>
         <Stack.Screen

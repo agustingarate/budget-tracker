@@ -3,8 +3,13 @@ import { View, Text, StyleSheet, Image } from "react-native";
 import { ImagesAssets } from "../../../assets/images/images";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { IonicIcons } from "../../data/types";
+import { useNavigation } from "@react-navigation/native";
 
-function Balance() {
+type BalanceProps = {
+  onPressModifyBudget: (mode: "add" | "remove") => void;
+};
+
+function Balance({ onPressModifyBudget }: BalanceProps) {
   function RoundedButon({
     onPress,
     backgroundColor,
@@ -23,6 +28,11 @@ function Balance() {
       />
     );
   }
+
+  function onPressModifyBudgetHandler(mode: "add" | "remove") {
+    onPressModifyBudget(mode);
+  }
+
   return (
     <View style={styles.card}>
       <View style={styles.leftColumn}>
@@ -38,8 +48,16 @@ function Balance() {
         </View>
 
         <View style={{ flexDirection: "row", justifyContent: "center" }}>
-          <RoundedButon backgroundColor="#eeeeee" iconName="add" />
-          <RoundedButon backgroundColor="#ffe4d6" iconName="remove" />
+          <RoundedButon
+            backgroundColor="#eeeeee"
+            iconName="add"
+            onPress={() => onPressModifyBudgetHandler("add")}
+          />
+          <RoundedButon
+            backgroundColor="#ffe4d6"
+            iconName="remove"
+            onPress={() => onPressModifyBudgetHandler("remove")}
+          />
         </View>
       </View>
       <View style={styles.rightColumn}>
