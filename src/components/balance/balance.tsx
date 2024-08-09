@@ -7,9 +7,10 @@ import { useNavigation } from "@react-navigation/native";
 
 type BalanceProps = {
   onPressModifyBudget: (mode: "add" | "remove") => void;
+  total: string;
 };
 
-function Balance({ onPressModifyBudget }: BalanceProps) {
+function BalanceComponent({ onPressModifyBudget, total }: BalanceProps) {
   function RoundedButon({
     onPress,
     backgroundColor,
@@ -44,7 +45,7 @@ function Balance({ onPressModifyBudget }: BalanceProps) {
             <Ionicons name="trending-up-outline" size={20} color={"#0acd00"} />
           </View>
 
-          <Text style={styles.budgetText}>$1345.33</Text>
+          <Text style={styles.budgetText}>{"$" + total}</Text>
         </View>
 
         <View style={{ flexDirection: "row", justifyContent: "center" }}>
@@ -111,4 +112,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Balance;
+export default BalanceComponent;

@@ -1,7 +1,7 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import LoginScreen from "./src/screens/auth/login_screen";
@@ -17,6 +17,10 @@ import { useEffect } from "react";
 import PlansListScreen from "./src/screens/plans/plans_list_screen";
 import PlanDetailScreen from "./src/screens/plans/plan_detail_screen";
 import AddPlanScreen from "./src/screens/plans/add_plan.screen";
+import { Provider, useSelector } from "react-redux";
+import { persistor, store } from "./src/store/store";
+import { selectUser } from "./src/store/session_slice";
+import { PersistGate } from "redux-persist/integration/react";
 
 export default function App() {
   const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -25,7 +29,11 @@ export default function App() {
   function LoginNavigator() {
     return (
       <Stack.Navigator>
-        <Stack.Screen name="LoginScreen" component={LoginScreen} />
+        <Stack.Screen
+          name="LoginScreen"
+          component={LoginScreen}
+          options={{ headerShown: false }}
+        />
         <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
       </Stack.Navigator>
     );
@@ -107,21 +115,41 @@ export default function App() {
     return null;
   }
 
-  return (
-    <NavigationContainer>
-      {/* <LoginNavigator /> */}
-      <StatusBar style="dark" />
+  function Screens() {
+    const token = useSelector(selectUser).token;
 
-      <Stack.Navigator>
-        <Stack.Screen
-          name="RootScreen"
-          component={RootScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen name="AddPlanScreen" component={AddPlanScreen} />
-        <Stack.Screen name="PlanDetailScreen" component={PlanDetailScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    return (
+      <NavigationContainer>
+        <StatusBar style="dark" />
+        {!token && <LoginNavigator />}
+        {token && (
+          <Stack.Navigator>
+            <Stack.Screen
+              name="RootScreen"
+              component={RootScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="AddPlanScreen"
+              component={AddPlanScreen}
+              options={{ contentStyle: { backgroundColor: "#fff" } }}
+            />
+            <Stack.Screen
+              name="PlanDetailScreen"
+              component={PlanDetailScreen}
+            />
+          </Stack.Navigator>
+        )}
+      </NavigationContainer>
+    );
+  }
+
+  return (
+    <Provider store={store}>
+      <PersistGate persistor={persistor} loading={null}>
+        <Screens />
+      </PersistGate>
+    </Provider>
   );
 }
 
