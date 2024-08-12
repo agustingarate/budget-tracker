@@ -1,13 +1,17 @@
 import RNDateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
-import { Input } from "@rneui/themed";
+import { Button, Input } from "@rneui/themed";
 import { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import DropDownPicker, {
   ItemType,
   ValueType,
 } from "react-native-dropdown-picker";
+import { addPlan } from "../../services/plans";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../store/session_slice";
+import { Plan } from "../../data/models/plan";
 
 function AddPlanScreen({}) {
   const items: ItemType<string>[] = [
@@ -16,12 +20,20 @@ function AddPlanScreen({}) {
     { label: "Work", value: "work" },
     { label: "Family", value: "family" },
   ];
+
+  const userSelect = useSelector(selectUser);
+
+  const [loading, setLoading] = useState<boolean>(false);
+  const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
   const [categoryPickerIsOpen, setCategoryPickerIsOpen] =
     useState<boolean>(false);
+
+  const [deadline, setDeadline] = useState<Date>(new Date());
+  const [title, setTitle] = useState<string>();
+  const [amount, setAmount] = useState<string>();
+  const [percentage, setPercentage] = useState<string>();
   const [categoryPickerValue, setCategoryPickerValue] =
     useState<ValueType | null>(null);
-  const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
-  const [deadline, setDeadline] = useState<Date>(new Date());
 
   function handleDatePicker(show: boolean) {
     setShowDatePicker(show);
@@ -32,12 +44,43 @@ function AddPlanScreen({}) {
     date && setDeadline(date);
   }
 
+  async function onAcceptHandler() {
+    setLoading(true);
+    const uid = userSelect.uid;
+    try {
+      if (uid) {
+        await addPlan(
+          uid,
+          new Plan(
+            title!,
+            parseFloat(amount!),
+            parseFloat(percentage!),
+            categoryPickerValue?.toString()!,
+            deadline,
+          ),
+        );
+      }
+    } catch (e) {
+      console.log(e);
+    }
+
+    setLoading(false);
+  }
+
   return (
     <View style={styles.screen}>
       <View style={{ padding: 20 }}>
         <Text></Text>
-        <Input inputStyle={styles.input} placeholder="Trip to Waduk Cengklik" />
-        <Input inputStyle={styles.input} label="Enter amount" />
+        <Input
+          inputStyle={styles.input}
+          placeholder="Trip to Waduk Cengklik"
+          onChangeText={setTitle}
+        />
+        <Input
+          inputStyle={styles.input}
+          label="Enter amount"
+          onChangeText={setAmount}
+        />
         <View
           style={{
             flexDirection: "row",
@@ -45,7 +88,11 @@ function AddPlanScreen({}) {
           }}
         >
           <View>
-            <Input inputStyle={styles.input} label="Enter percentage" />
+            <Input
+              inputStyle={styles.input}
+              label="Enter percentage"
+              onChangeText={setPercentage}
+            />
           </View>
           <View style={{ flex: 1 }}>
             <Text style={{ textAlign: "center" }}> of $3456 available</Text>
@@ -86,6 +133,15 @@ function AddPlanScreen({}) {
             <RNDateTimePicker value={deadline} onChange={onChangeDatePicker} />
           )}
         </View>
+        <Button
+          buttonStyle={styles.button}
+          titleProps={{}}
+          titleStyle={{ color: "#f9fffd" }}
+          radius="xl"
+          title="Accept"
+          loading={loading}
+          onPress={onAcceptHandler}
+        />
       </View>
     </View>
   );
@@ -119,6 +175,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     padding: 10,
     fontSize: 15,
+  },
+  button: {
+    paddingHorizontal: 23,
+    backgroundColor: "#141414",
   },
 });
 

@@ -1,7 +1,7 @@
 import axios from "axios";
 import Balance, { Transaction } from "../data/models/budget";
 
-const baseUrl = "https://plans-expenses-default-rtdb.firebaseio.com/budgets";
+const BASE_URL = "https://plans-expenses-default-rtdb.firebaseio.com/budgets";
 
 export async function updateBalance(
   amount: number,
@@ -16,7 +16,7 @@ export async function updateBalance(
         transactions: [transaction, ...oldBalance.transactions],
       });
 
-      const response = await axios.patch(`${baseUrl}/${uid}.json`, newBalance);
+      const response = await axios.patch(`${BASE_URL}/${uid}.json`, newBalance);
 
       console.log("API - updateBalance(): ", response.status, response.data);
     }
@@ -26,8 +26,12 @@ export async function updateBalance(
 }
 
 export async function postBalance(balance: Balance, uid: string) {
-  const response = await axios.put(`${baseUrl}/${uid}.json`, balance);
-  console.log("API - postBalance(): ", response.status, response.data);
+  try {
+    const response = await axios.put(`${BASE_URL}/${uid}.json`, balance);
+    console.log("API - postBalance(): ", response.status, response.data);
+  } catch (e) {
+    console.error("API - postBalance(): ", e);
+  }
 }
 
 export async function createBalance(uid: string) {
@@ -36,11 +40,23 @@ export async function createBalance(uid: string) {
 
 export async function getBalance(uid: string) {
   try {
-    const response = await axios.get(`${baseUrl}/${uid}.json`);
+    const response = await axios.get(`${BASE_URL}/${uid}.json`);
 
     console.log("API - getBalance(): ", response.status, response.data);
 
     return new Balance(response.data.total, response.data.transactions ?? []);
+  } catch (e) {
+    console.error("Error getting the user's balance", e);
+  }
+}
+
+export async function getBalanceTotal(uid: string) {
+  try {
+    const response = await axios.get(`${BASE_URL}/${uid}/total.json`);
+
+    console.log("API - getBalanceTotal(): ", response.status, response.data);
+
+    return response.data;
   } catch (e) {
     console.error("Error getting the user's balance", e);
   }

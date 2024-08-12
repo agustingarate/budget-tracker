@@ -7,9 +7,15 @@ import { useNavigation } from "@react-navigation/native";
 
 type PlanCardProps = {
   type?: PlanCardEnum | null;
+  title: string;
+  category: string;
 };
 
-function PlanCard({ type = PlanCardEnum.main }: PlanCardProps) {
+function PlanCard({
+  type = PlanCardEnum.main,
+  title,
+  category,
+}: PlanCardProps) {
   function ProgressWidget() {
     switch (type!) {
       case PlanCardEnum.secondary:
@@ -52,7 +58,7 @@ function PlanCard({ type = PlanCardEnum.main }: PlanCardProps) {
           { flex: type == PlanCardEnum.main ? 0.9 : undefined },
         ]}
       >
-        <Text style={styles.title}>Budget to trip</Text>
+        <Text style={styles.title}>{title}</Text>
         <Text style={styles.subtitle}>left $992 of $2500</Text>
       </View>
     );
@@ -67,7 +73,7 @@ function PlanCard({ type = PlanCardEnum.main }: PlanCardProps) {
           color: "#4126a1",
         }}
       >
-        #Traveling
+        {"#" + category}
       </Text>
     );
   }

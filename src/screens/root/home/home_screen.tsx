@@ -14,9 +14,12 @@ import Balance from "../../../data/models/budget";
 import BalanceComponent from "../../../components/balance/balance";
 import { useIsFocused } from "@react-navigation/native";
 import { updateBudget } from "../../../store/budget_slice";
+import { getAllPlans } from "../../../services/plans";
+import { Plan } from "../../../data/models/plan";
 
 function HomeScreen({ navigation, route }: HomeTabScreenProps<"HomeScreen">) {
   const [balance, setBalance] = useState<Balance>();
+  const [plans, setPlans] = useState<Plan[]>();
   const [modalProperties, setModalProperties] = useState<{
     visible: boolean;
     mode: "add" | "remove" | null;
@@ -26,12 +29,14 @@ function HomeScreen({ navigation, route }: HomeTabScreenProps<"HomeScreen">) {
   });
 
   const dispatch = useDispatch();
-  const userSelect = useSelector(selectUser);
   const budgetDispatch = useDispatch();
+
+  const userSelect = useSelector(selectUser);
+
   const isFocused = useIsFocused();
+  const uid = userSelect.uid;
 
   async function handleBalance() {
-    const uid = userSelect.uid;
     if (uid) {
       const response = await getBalance(uid);
       console.log("BALANCE RESPONSE", response);
@@ -40,16 +45,24 @@ function HomeScreen({ navigation, route }: HomeTabScreenProps<"HomeScreen">) {
     }
   }
 
+  async function handlePlans() {
+    if (uid) {
+      const response = await getAllPlans(uid);
+      setPlans(response);
+    }
+  }
+
   useEffect(() => {
-    isFocused && handleBalance();
+    if (isFocused && uid) {
+      handleBalance();
+    }
   }, [isFocused]);
 
-  // function onRemoveIncome(amount: number) {
-  //   setBalance((oldBalance) => oldBalance - amount);
-  // }
-  // function onAddIncome(amount: number) {
-  //   setBalance((oldBalance) => oldBalance + amount);
-  // }
+  useEffect(() => {
+    if (isFocused && uid) {
+      handlePlans();
+    }
+  }, [isFocused]);
 
   function onPressModifyBudget(mode: "add" | "remove") {
     switch (mode) {
@@ -101,17 +114,31 @@ function HomeScreen({ navigation, route }: HomeTabScreenProps<"HomeScreen">) {
             }
             onPressModifyBudget={onPressModifyBudget}
           />
-          <PlanCard />
-
-          <View style={styles.secondaryContainer}>
-            <View style={styles.secondaryCard}>
-              <PlanCard type={PlanCardEnum.secondary} />
+          {plans != null && plans.length > 0 ? (
+            <>
+              <PlanCard title={plans![0].title} category={plans![0].category} />
+              <View>
+                <View style={styles.secondaryContainer}>
+                  {plans.length >= 2 &&
+                    plans.slice(1).map((plan) => {
+                      return (
+                        <View style={styles.secondaryCard} key={plan.id}>
+                          <PlanCard
+                            title={plan.title}
+                            category={plan.category}
+                            type={PlanCardEnum.secondary}
+                          />
+                        </View>
+                      );
+                    })}
+                </View>
+              </View>
+            </>
+          ) : (
+            <View style={styles.errorContainer}>
+              <Text> There is not any plan. Just add one!</Text>
             </View>
-
-            <View style={styles.secondaryCard}>
-              <PlanCard type={PlanCardEnum.secondary} />
-            </View>
-          </View>
+          )}
         </View>
       </ScrollView>
       <View style={styles.floatingActionButtonContainer}>
@@ -139,7 +166,7 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 50,
     height: Metrics.SCREEN_HEIGHT,
-    justifyContent: "space-between",
+    justifyContent: "space-evenly",
   },
   secondaryContainer: {
     flexDirection: "row",
@@ -147,6 +174,7 @@ const styles = StyleSheet.create({
   },
   secondaryCard: {
     flex: 0.48,
+    flexBasis: 1,
   },
   floatingActionButtonContainer: {
     position: "absolute",
@@ -158,6 +186,11 @@ const styles = StyleSheet.create({
     height: 55,
     backgroundColor: "#161616",
     opacity: 0.92,
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
