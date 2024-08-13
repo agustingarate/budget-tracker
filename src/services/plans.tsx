@@ -4,10 +4,9 @@ import { getBalance, getBalanceTotal } from "./balance";
 
 const BASE_URL = "https://plans-expenses-default-rtdb.firebaseio.com/plans";
 
-export async function addPlan(uid: string, plan: Plan) {
+export async function addPlan(uid: string, plan: Plan, savingAmount: number) {
   try {
-    await setNewTotal(uid, plan.percentage);
-
+    await setNewTotal(uid, savingAmount);
     const response = await axios.post(`${BASE_URL}/${uid}/data.json`, plan);
     console.log("API - addPlan(): ", response.status, response.data, "\n");
   } catch (e) {
@@ -31,29 +30,15 @@ export async function getTotal(uid: string) {
   }
 }
 
-export async function setNewTotal(uid: string, percentage: number) {
+export async function setNewTotal(uid: string, amount: number) {
   try {
-    const totalBalance = await getBalanceTotal(uid);
-    let oldTotal = await getTotal(uid);
+    const oldTotal = await getTotal(uid);
 
-    const calculatedAmount = (totalBalance - oldTotal) * percentage + oldTotal;
+    const response = await axios.patch(`${BASE_URL}/${uid}.json`, {
+      total: oldTotal + amount,
+    });
 
-    if (calculatedAmount > 0 && calculatedAmount < totalBalance) {
-      console.log(calculatedAmount);
-      const response = await axios.patch(`${BASE_URL}/${uid}.json`, {
-        total: calculatedAmount,
-      });
-
-      console.log(
-        "API - setNewTotal(): ",
-        response.status,
-        response.data,
-        "\n",
-      );
-      return response.data;
-    } else {
-      throw Error("Se utilizo todo el total");
-    }
+    console.log("API - setNewTotal(): ", response.status, response.data, "\n");
   } catch (e) {
     console.error("API - setNewTotal(): ", e);
     throw e;
@@ -73,7 +58,7 @@ export async function getAllPlans(uid: string) {
           new Plan(
             planResponse.title,
             planResponse.totalRequired,
-            planResponse.percentage,
+            planResponse.savings,
             planResponse.category,
             planResponse.deadline,
             key,
@@ -84,6 +69,6 @@ export async function getAllPlans(uid: string) {
 
     return plans;
   } catch (e) {
-    console.log(e);
+    console.error("API - getAllPlans(): ", e);
   }
 }

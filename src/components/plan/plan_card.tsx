@@ -4,33 +4,48 @@ import CircularProgress from "react-native-circular-progress-indicator";
 import Metrics from "../../theme/metrics";
 import { LinearProgress } from "@rneui/themed/dist/LinearProgress";
 import { useNavigation } from "@react-navigation/native";
+import { useEffect, useState } from "react";
 
 type PlanCardProps = {
   type?: PlanCardEnum | null;
   title: string;
   category: string;
+  currentAmount: number;
+  total: number;
 };
 
 function PlanCard({
   type = PlanCardEnum.main,
   title,
   category,
+  currentAmount,
+  total,
 }: PlanCardProps) {
+  const [savingsProgress, setSavingProgress] = useState<number>();
+  useEffect(() => {
+    let savingsProgress =
+      currentAmount <= total ? Math.round((currentAmount / total) * 100) : 100;
+    setSavingProgress(savingsProgress);
+  }, []);
+
   function ProgressWidget() {
     switch (type!) {
       case PlanCardEnum.secondary:
         return (
           <View style={{ paddingTop: 30 }}>
-            <Text>{(992 / 2500) * 100}%</Text>
-            <LinearProgress style={{ marginVertical: 10 }} value={992 / 2500} />
+            <Text>{savingsProgress}%</Text>
+            <LinearProgress
+              style={{ marginVertical: 10 }}
+              value={savingsProgress! / 100}
+            />
             <View
               style={{
                 flexDirection: "row",
                 justifyContent: "space-between",
               }}
             >
-              <Text>$992</Text>
-              <Text>$2500</Text>
+              <Text>${currentAmount}</Text>
+              <Text>${total}</Text>
             </View>
           </View>
         );
@@ -38,7 +53,7 @@ function PlanCard({
       default:
         return (
           <CircularProgress
-            value={(992 / 2500) * 100}
+            value={savingsProgress ?? 0}
             maxValue={100}
             radius={13 * Metrics.SCALE}
             valueSuffix="%"
@@ -59,7 +74,13 @@ function PlanCard({
         ]}
       >
         <Text style={styles.title}>{title}</Text>
-        <Text style={styles.subtitle}>left $992 of $2500</Text>
+        {currentAmount <= total ? (
+          <Text style={styles.subtitle}>
+            left ${currentAmount} of ${total}
+          </Text>
+        ) : (
+          <Text>Done! You reach the goal of ${total}</Text>
+        )}
       </View>
     );
   }
@@ -84,7 +105,7 @@ function PlanCard({
           styles.card,
           {
             flexDirection: type != PlanCardEnum.secondary ? "row" : "column",
-            backgroundColor: type == PlanCardEnum.list ? "#f9ffe8" : "white",
+            backgroundColor: "#fff",
             justifyContent:
               type == PlanCardEnum.list ? "space-evenly" : "space-between",
           },

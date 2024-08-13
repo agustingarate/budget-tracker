@@ -20,6 +20,7 @@ import { Plan } from "../../../data/models/plan";
 function HomeScreen({ navigation, route }: HomeTabScreenProps<"HomeScreen">) {
   const [balance, setBalance] = useState<Balance>();
   const [plans, setPlans] = useState<Plan[]>();
+
   const [modalProperties, setModalProperties] = useState<{
     visible: boolean;
     mode: "add" | "remove" | null;
@@ -38,10 +39,9 @@ function HomeScreen({ navigation, route }: HomeTabScreenProps<"HomeScreen">) {
 
   async function handleBalance() {
     if (uid) {
-      const response = await getBalance(uid);
-      console.log("BALANCE RESPONSE", response);
-      setBalance(response);
-      budgetDispatch(updateBudget({ ...response }));
+      const balanceResponse = await getBalance(uid);
+      setBalance(balanceResponse);
+      budgetDispatch(updateBudget({ ...balanceResponse }));
     }
   }
 
@@ -116,7 +116,12 @@ function HomeScreen({ navigation, route }: HomeTabScreenProps<"HomeScreen">) {
           />
           {plans != null && plans.length > 0 ? (
             <>
-              <PlanCard title={plans![0].title} category={plans![0].category} />
+              <PlanCard
+                currentAmount={plans[0].savings}
+                total={plans[0].totalRequired}
+                title={plans[0].title}
+                category={plans[0].category}
+              />
               <View>
                 <View style={styles.secondaryContainer}>
                   {plans.length >= 2 &&
@@ -124,6 +129,8 @@ function HomeScreen({ navigation, route }: HomeTabScreenProps<"HomeScreen">) {
                       return (
                         <View style={styles.secondaryCard} key={plan.id}>
                           <PlanCard
+                            currentAmount={plan.savings}
+                            total={plan.totalRequired ?? 0}
                             title={plan.title}
                             category={plan.category}
                             type={PlanCardEnum.secondary}
