@@ -1,21 +1,13 @@
-import { BottomSheet, Button, Input } from "@rneui/base";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  ScrollView,
-  KeyboardAvoidingView,
-} from "react-native";
+import { BottomSheet, Input } from "@rneui/base";
+import { View, Text, StyleSheet, KeyboardAvoidingView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useState } from "react";
 import { updateBalance } from "../../services/balance";
-import Balance, { Transaction } from "../../data/models/budget";
+import { Transaction } from "../../data/models/budget";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../store/session_slice";
 import { selectBudget } from "../../store/budget_slice";
-import { isLoading } from "expo-font";
+import { BTButton } from "../globals/button";
 
 type AddBalance = {
   visible: boolean;
@@ -88,14 +80,11 @@ function AddBalance({ visible, mode, onDismiss }: AddBalance) {
             onChangeText={onChangeDescription}
             keyboardType="default"
           />
-          <Button
-            buttonStyle={styles.button}
-            titleProps={{}}
-            titleStyle={{ color: "#f9fffd" }}
-            radius="xl"
-            title="Accept"
-            loading={loading}
+          <BTButton
+            text="Accept"
+            backgroundColor="#141414"
             onPress={onAcceptHandler}
+            loading={loading}
           />
         </View>
       </BottomSheet>

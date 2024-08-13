@@ -18,6 +18,7 @@ import { addPlan } from "../../services/plans";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../store/session_slice";
 import { Plan } from "../../data/models/plan";
+import { BTButton } from "../../components/globals/button";
 
 function AddPlanScreen({}) {
   const items: ItemType<string>[] = [
@@ -149,14 +150,11 @@ function AddPlanScreen({}) {
               />
             )}
           </View>
-          <Button
-            buttonStyle={styles.button}
-            titleProps={{}}
-            titleStyle={{ color: "#f9fffd" }}
-            radius="xl"
-            title="Accept"
-            loading={loading}
+          <BTButton
+            text="Accept"
+            backgroundColor="#141414"
             onPress={onAcceptHandler}
+            loading={loading}
           />
         </View>
       </View>

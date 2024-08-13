@@ -9,7 +9,6 @@ import { useSelector } from "react-redux";
 import { selectUser } from "../../store/session_slice";
 
 function PlansListScreen() {
-  const dummyData = [1, 2, 3, 4, 5, 6, 7, 8, 8];
   const [plans, setPlans] = useState<Plan[]>([]);
   const userSelector = useSelector(selectUser);
   const uid = userSelector.uid;
@@ -32,6 +31,8 @@ function PlansListScreen() {
                 title={plan.item.title}
                 category={plan.item.category}
                 type={PlanCardEnum.list}
+                currentAmount={plan.item.savings}
+                total={plan.item.totalRequired}
               />
             </View>
           )}

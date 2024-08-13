@@ -1,9 +1,7 @@
-import { Button } from "@rneui/themed";
 import { View, Text, StyleSheet, Image } from "react-native";
 import { ImagesAssets } from "../../../assets/images/images";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { IonicIcons } from "../../data/types";
-import { useNavigation } from "@react-navigation/native";
+import { BTButton, BTCircleButton } from "../globals/button";
 
 type BalanceProps = {
   onPressModifyBudget: (mode: "add" | "remove") => void;
@@ -11,25 +9,6 @@ type BalanceProps = {
 };
 
 function BalanceComponent({ onPressModifyBudget, total }: BalanceProps) {
-  function RoundedButon({
-    onPress,
-    backgroundColor,
-    iconName,
-  }: {
-    onPress?: () => void;
-    backgroundColor: string;
-    iconName: IonicIcons;
-  }) {
-    return (
-      <Button
-        buttonStyle={{ backgroundColor: backgroundColor, marginHorizontal: 8 }}
-        icon={<Ionicons name={iconName} size={20}></Ionicons>}
-        radius={"xl"}
-        onPress={onPress}
-      />
-    );
-  }
-
   function onPressModifyBudgetHandler(mode: "add" | "remove") {
     onPressModifyBudget(mode);
   }
@@ -49,12 +28,12 @@ function BalanceComponent({ onPressModifyBudget, total }: BalanceProps) {
         </View>
 
         <View style={{ flexDirection: "row", justifyContent: "center" }}>
-          <RoundedButon
+          <BTCircleButton
             backgroundColor="#eeeeee"
             iconName="add"
             onPress={() => onPressModifyBudgetHandler("add")}
           />
-          <RoundedButon
+          <BTCircleButton
             backgroundColor="#ffe4d6"
             iconName="remove"
             onPress={() => onPressModifyBudgetHandler("remove")}
@@ -64,13 +43,7 @@ function BalanceComponent({ onPressModifyBudget, total }: BalanceProps) {
       <View style={styles.rightColumn}>
         <Image style={styles.avatar} source={ImagesAssets.avatar} />
 
-        <Button
-          buttonStyle={styles.button}
-          titleProps={{}}
-          titleStyle={{ color: "#f9fffd" }}
-          radius="xl"
-          title="Details"
-        />
+        <BTButton text="Details" />
       </View>
     </View>
   );
