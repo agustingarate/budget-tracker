@@ -5,10 +5,15 @@ import { BTButton, BTCircleButton } from "../globals/button";
 
 type BalanceProps = {
   onPressModifyBudget: (mode: "add" | "remove") => void;
+  onPressDetail: () => void;
   total: string;
 };
 
-function BalanceComponent({ onPressModifyBudget, total }: BalanceProps) {
+function BalanceComponent({
+  onPressModifyBudget,
+  onPressDetail,
+  total,
+}: BalanceProps) {
   function onPressModifyBudgetHandler(mode: "add" | "remove") {
     onPressModifyBudget(mode);
   }
@@ -43,7 +48,7 @@ function BalanceComponent({ onPressModifyBudget, total }: BalanceProps) {
       <View style={styles.rightColumn}>
         <Image style={styles.avatar} source={ImagesAssets.avatar} />
 
-        <BTButton text="Details" />
+        <BTButton text="Details" onPress={onPressDetail} />
       </View>
     </View>
   );

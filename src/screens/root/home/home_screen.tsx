@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import PlanCard from "../../../components/plan/plan_card";
 import { PlanCardEnum } from "../../../data/enums";
 import Metrics from "../../../theme/metrics";
@@ -8,7 +8,7 @@ import { Button } from "@rneui/base";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { HomeTabScreenProps } from "../../../navigation/types";
 import { useDispatch, useSelector } from "react-redux";
-import { clearSession, selectUser } from "../../../store/session_slice";
+import { selectUser } from "../../../store/session_slice";
 import { getBalance } from "../../../services/balance";
 import Balance from "../../../data/models/budget";
 import BalanceComponent from "../../../components/balance/balance";
@@ -17,7 +17,7 @@ import { updateBudget } from "../../../store/budget_slice";
 import { getAllPlans } from "../../../services/plans";
 import { Plan } from "../../../data/models/plan";
 
-function HomeScreen({ navigation, route }: HomeTabScreenProps<"HomeScreen">) {
+function HomeScreen({ navigation }: HomeTabScreenProps<"HomeScreen">) {
   const [balance, setBalance] = useState<Balance>();
   const [plans, setPlans] = useState<Plan[]>();
 
@@ -30,7 +30,6 @@ function HomeScreen({ navigation, route }: HomeTabScreenProps<"HomeScreen">) {
   });
 
   const dispatch = useDispatch();
-  const budgetDispatch = useDispatch();
 
   const userSelect = useSelector(selectUser);
 
@@ -41,7 +40,7 @@ function HomeScreen({ navigation, route }: HomeTabScreenProps<"HomeScreen">) {
     if (uid) {
       const balanceResponse = await getBalance(uid);
       setBalance(balanceResponse);
-      budgetDispatch(updateBudget({ ...balanceResponse }));
+      dispatch(updateBudget({ ...balanceResponse }));
     }
   }
 
@@ -56,13 +55,13 @@ function HomeScreen({ navigation, route }: HomeTabScreenProps<"HomeScreen">) {
     if (isFocused && uid) {
       handleBalance();
     }
-  }, [isFocused]);
+  }, []);
 
   useEffect(() => {
     if (isFocused && uid) {
       handlePlans();
     }
-  }, [isFocused]);
+  }, []);
 
   function onPressModifyBudget(mode: "add" | "remove") {
     switch (mode) {
@@ -93,8 +92,9 @@ function HomeScreen({ navigation, route }: HomeTabScreenProps<"HomeScreen">) {
   function createNewPlanHandler() {
     navigation.navigate("AddPlanScreen");
   }
-  function onCloseSession() {
-    dispatch(clearSession());
+
+  function onPressBudgetDetails() {
+    navigation.navigate("PlanDetailScreen");
   }
 
   return (
@@ -105,14 +105,12 @@ function HomeScreen({ navigation, route }: HomeTabScreenProps<"HomeScreen">) {
         keyboardShouldPersistTaps="always"
       >
         <View style={styles.screen}>
-          <Pressable onPress={onCloseSession}>
-            <Text>Close session</Text>
-          </Pressable>
           <BalanceComponent
             total={
               balance?.total != undefined ? balance?.total.toString() : "0"
             }
             onPressModifyBudget={onPressModifyBudget}
+            onPressDetail={onPressBudgetDetails}
           />
           {plans != null && plans.length > 0 ? (
             <>

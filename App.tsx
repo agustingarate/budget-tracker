@@ -132,11 +132,15 @@ export default function App() {
             <Stack.Screen
               name="AddPlanScreen"
               component={AddPlanScreen}
-              options={{ contentStyle: { backgroundColor: "#fff" } }}
+              options={{
+                contentStyle: { backgroundColor: "#fff" },
+                title: "Add plan",
+              }}
             />
             <Stack.Screen
               name="PlanDetailScreen"
               component={PlanDetailScreen}
+              options={{ title: "Budget details" }}
             />
           </Stack.Navigator>
         )}

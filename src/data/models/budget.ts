@@ -29,6 +29,7 @@ export class Transaction implements ITransaction {
     public amount: number,
     public description: string,
     public type: TransactionType,
+    public id?: string,
   ) {}
 
   public copyWith(modifyObject: {
