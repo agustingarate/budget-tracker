@@ -1,5 +1,4 @@
 import axios from "axios";
-import { FIREBASE_API_KEY } from "../.env/api";
 import { AuthMode } from "../data/enums";
 import { createBalance, updateBalance } from "./balance";
 import { User } from "../data/models/user";
@@ -8,7 +7,9 @@ const BASE_URL = "https://identitytoolkit.googleapis.com/v1";
 
 export async function auth(email: string, password: string, mode: AuthMode) {
   const response = await axios.post(
-    `${BASE_URL}/accounts:${mode.valueOf()}?key=${FIREBASE_API_KEY}`,
+    `${BASE_URL}/accounts:${mode.valueOf()}?key=${
+      process.env.EXPO_PUBLIC_FIREBASE_KEY
+    }`,
     {
       email: email,
       password: password,
