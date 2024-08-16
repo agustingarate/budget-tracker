@@ -21,6 +21,25 @@ import { Provider, useSelector } from "react-redux";
 import { persistor, store } from "./src/store/store";
 import { selectUser } from "./src/store/session_slice";
 import { PersistGate } from "redux-persist/integration/react";
+import BudgetDetailScreen from "./src/screens/budget/budget_detail_screen";
+import NotFound from "./src/screens/error/not_found/not_found";
+
+const linking = {
+  prefixes: [],
+  config: {
+    screens: {
+      Login: "login",
+      SignUp: "signup",
+      AddPlan: "addPlan",
+      PlanDetail: "planDetails/:id",
+      BudgetDetail: "budgetDetails",
+      Root: {
+        path: "",
+      },
+      NotFound: "*",
+    },
+  },
+};
 
 export default function App() {
   const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -30,11 +49,11 @@ export default function App() {
     return (
       <Stack.Navigator>
         <Stack.Screen
-          name="LoginScreen"
+          name="Login"
           component={LoginScreen}
           options={{ headerShown: false }}
         />
-        <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
+        <Stack.Screen name="SignUp" component={SignUpScreen} />
       </Stack.Navigator>
     );
   }
@@ -42,16 +61,16 @@ export default function App() {
   function RootScreen() {
     function getIconName(name: keyof HomeTabParamList) {
       switch (name) {
-        case "HomeScreen":
+        case "Home":
           return "home-outline";
 
-        case "SearchScreen":
+        case "Search":
           return "search-outline";
 
-        case "PlansListScreen":
+        case "Plans":
           return "grid-outline";
 
-        case "SettingsScreen":
+        case "Settings":
           return "settings-outline";
       }
     }
@@ -75,22 +94,22 @@ export default function App() {
         })}
       >
         <BottomTab.Screen
-          name="HomeScreen"
+          name="Home"
           component={HomeScreen}
           options={{ title: "Home", headerShown: false }}
         />
         <BottomTab.Screen
-          name="SearchScreen"
+          name="Search"
           component={SearchScreen}
           options={{ title: "Search" }}
         />
         <BottomTab.Screen
-          name="PlansListScreen"
+          name="Plans"
           component={PlansListScreen}
           options={{ title: "Plans" }}
         />
         <BottomTab.Screen
-          name="SettingsScreen"
+          name="Settings"
           component={SettingsScreen}
           options={{ title: "Settings" }}
         />
@@ -119,18 +138,18 @@ export default function App() {
     const token = useSelector(selectUser).token;
 
     return (
-      <NavigationContainer>
+      <NavigationContainer linking={linking}>
         <StatusBar style="dark" />
         {!token && <LoginNavigator />}
         {token && (
           <Stack.Navigator>
             <Stack.Screen
-              name="RootScreen"
+              name="Root"
               component={RootScreen}
               options={{ headerShown: false }}
             />
             <Stack.Screen
-              name="AddPlanScreen"
+              name="AddPlan"
               component={AddPlanScreen}
               options={{
                 contentStyle: { backgroundColor: "#fff" },
@@ -138,9 +157,19 @@ export default function App() {
               }}
             />
             <Stack.Screen
-              name="PlanDetailScreen"
-              component={PlanDetailScreen}
+              name="BudgetDetail"
+              component={BudgetDetailScreen}
               options={{ title: "Budget details" }}
+            />
+            <Stack.Screen
+              name="PlanDetail"
+              component={PlanDetailScreen}
+              options={{ title: "Plan details" }}
+            />
+            <Stack.Screen
+              name="NotFound"
+              component={NotFound}
+              options={{ title: "Not Found" }}
             />
           </Stack.Navigator>
         )}

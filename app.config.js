@@ -17,7 +17,7 @@ export default {
       supportsTablet: true,
       bundleIdentifier: IS_PROD
         ? "com.agarate.budget_tracker"
-        : "com.myappcom.agarate.budget_tracker.stg",
+        : "com.agarate.budget_tracker.stg",
     },
     android: {
       adaptiveIcon: {
@@ -26,7 +26,7 @@ export default {
       },
       package: IS_PROD
         ? "com.agarate.budget_tracker"
-        : "com.myappcom.agarate.budget_tracker.stg",
+        : "com.agarate.budget_tracker.stg",
     },
     web: {
       favicon: "./assets/favicon.png",

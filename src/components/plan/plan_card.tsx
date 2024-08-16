@@ -1,9 +1,9 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Pressable } from "react-native";
 import { PlanCardEnum } from "../../data/enums";
 import CircularProgress from "react-native-circular-progress-indicator";
 import Metrics from "../../theme/metrics";
 import { LinearProgress } from "@rneui/themed/dist/LinearProgress";
-import { useNavigation } from "@react-navigation/native";
+import { useLinkTo, useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 
 type PlanCardProps = {
@@ -12,9 +12,11 @@ type PlanCardProps = {
   category: string;
   currentAmount: number;
   total: number;
+  id?: string;
 };
 
 function PlanCard({
+  id,
   type = PlanCardEnum.main,
   title,
   category,
@@ -28,6 +30,11 @@ function PlanCard({
     setSavingProgress(savingsProgress);
   }, []);
 
+  const linkTo = useLinkTo();
+
+  function onTap() {
+    linkTo(`/planDetails/${id}`);
+  }
   function ProgressWidget() {
     switch (type!) {
       case PlanCardEnum.secondary:
@@ -99,7 +106,7 @@ function PlanCard({
     );
   }
   return (
-    <View>
+    <Pressable onPress={onTap}>
       <View
         style={[
           styles.card,
@@ -120,7 +127,7 @@ function PlanCard({
         </View>
         {type != PlanCardEnum.secondary ? <Description /> : null}
       </View>
-    </View>
+    </Pressable>
   );
 }
 

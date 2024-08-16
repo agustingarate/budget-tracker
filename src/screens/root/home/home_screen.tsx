@@ -12,14 +12,17 @@ import { selectUser } from "../../../store/session_slice";
 import { getBalance } from "../../../services/balance";
 import Balance from "../../../data/models/budget";
 import BalanceComponent from "../../../components/balance/balance";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused, useLinkTo } from "@react-navigation/native";
 import { updateBudget } from "../../../store/budget_slice";
 import { getAllPlans } from "../../../services/plans";
 import { Plan } from "../../../data/models/plan";
 
-function HomeScreen({ navigation }: HomeTabScreenProps<"HomeScreen">) {
+function HomeScreen({ navigation }: HomeTabScreenProps<"Home">) {
   const [balance, setBalance] = useState<Balance>();
   const [plans, setPlans] = useState<Plan[]>();
+
+  // const { onPress, ...props } = useLinkProps();
+  const linkTo = useLinkTo();
 
   const [modalProperties, setModalProperties] = useState<{
     visible: boolean;
@@ -90,11 +93,13 @@ function HomeScreen({ navigation }: HomeTabScreenProps<"HomeScreen">) {
   }
 
   function createNewPlanHandler() {
-    navigation.navigate("AddPlanScreen");
+    // navigation.navigate("AddPlanScreen");
+    linkTo("/addPlan");
   }
 
   function onPressBudgetDetails() {
-    navigation.navigate("PlanDetailScreen");
+    // navigation.navigate("PlanDetailScreen");
+    linkTo("/budgetDetails");
   }
 
   return (
@@ -115,6 +120,7 @@ function HomeScreen({ navigation }: HomeTabScreenProps<"HomeScreen">) {
           {plans != null && plans.length > 0 ? (
             <>
               <PlanCard
+                id={plans[0].id}
                 currentAmount={plans[0].savings}
                 total={plans[0].totalRequired}
                 title={plans[0].title}
@@ -127,6 +133,7 @@ function HomeScreen({ navigation }: HomeTabScreenProps<"HomeScreen">) {
                       return (
                         <View style={styles.secondaryCard} key={plan.id}>
                           <PlanCard
+                            id={plan.id}
                             currentAmount={plan.savings}
                             total={plan.totalRequired ?? 0}
                             title={plan.title}

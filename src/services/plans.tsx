@@ -72,3 +72,24 @@ export async function getAllPlans(uid: string) {
     console.error("API - getAllPlans(): ", e);
   }
 }
+
+export async function getPlan(uid: string, pid: string) {
+  try {
+    const response = await axios.get(`${BASE_URL}/${uid}/data/${pid}.json`);
+    console.log("API - getPlan(): ", response.status, response.data, "\n");
+
+    const data = response.data;
+
+    return new Plan(
+      data.title,
+      data.totalRequired,
+      data.savings,
+      data.category,
+      data.deadline,
+      pid,
+    );
+  } catch (e) {
+    console.error("API - getPlan(): ", e);
+    throw e;
+  }
+}

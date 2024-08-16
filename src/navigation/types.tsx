@@ -10,21 +10,26 @@ export type RootStackParamList = {
   // PostDetails: { id: string };
   // NotFound: undefined;
   //
-  RootScreen: NavigatorScreenParams<HomeTabParamList>;
-  LoginScreen: undefined;
-  SignUpScreen: undefined;
-  AddPlanScreen: undefined;
-  PlanDetailScreen: undefined;
+  Root: NavigatorScreenParams<HomeTabParamList>;
+  Login: undefined;
+  SignUp: undefined;
+  AddPlan: undefined;
+  PlanDetail: {
+    id: string;
+  };
+  BudgetDetail: undefined;
+  NotFound: undefined;
 };
 
 export type RootStackScreenProps<T extends keyof RootStackParamList> =
   NativeStackScreenProps<RootStackParamList, T>;
 
 export type HomeTabParamList = {
-  HomeScreen: undefined;
-  SearchScreen: undefined;
-  PlansListScreen: undefined;
-  SettingsScreen: undefined;
+  Home: undefined;
+  Search: undefined;
+  Plans: undefined;
+  Settings: undefined;
+  NotFound: undefined;
 };
 
 export type HomeTabScreenProps<T extends keyof HomeTabParamList> =

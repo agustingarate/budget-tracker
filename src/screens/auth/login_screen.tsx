@@ -18,11 +18,9 @@ import { AuthMode } from "../../data/enums";
 import { useDispatch } from "react-redux";
 import { store } from "../../store/store";
 import { set } from "../../store/session_slice";
+import { useLinkTo } from "@react-navigation/native";
 
-function LoginScreen({
-  navigation,
-  route,
-}: RootStackScreenProps<"LoginScreen">) {
+function LoginScreen({ navigation, route }: RootStackScreenProps<"Login">) {
   const initAccountData: AccountDataType = {
     email: "",
     password: "",
@@ -30,6 +28,7 @@ function LoginScreen({
 
   // const count = useSelector(selectCount);
   const dispatch = useDispatch();
+  const linkTo = useLinkTo();
 
   const [accountData, setAccountData] =
     useState<AccountDataType>(initAccountData);
@@ -45,7 +44,7 @@ function LoginScreen({
   }
 
   function navigateToSignUp(): void {
-    navigation.navigate("SignUpScreen");
+    linkTo("/signup");
   }
 
   async function onPressHandler() {
