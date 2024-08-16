@@ -22,6 +22,10 @@ export default class Balance implements IBalance {
       ...modifyObject,
     });
   }
+
+  static fromObject(data: any) {
+    return new Balance(data.total, data.transactions ?? []);
+  }
 }
 
 export class Transaction implements ITransaction {
@@ -39,5 +43,14 @@ export class Transaction implements ITransaction {
       ...this,
       ...modifyObject,
     });
+  }
+
+  static fromObject(data: any, id: any) {
+    return new Transaction(
+      data.amount,
+      data.description,
+      data.type,
+      data.id ?? id,
+    );
   }
 }

@@ -44,7 +44,7 @@ export async function getBalance(uid: string) {
 
     console.log("API - getBalance(): ", response.status, response.data);
 
-    return new Balance(response.data.total, response.data.transactions ?? []);
+    return Balance.fromObject(response.data);
   } catch (e) {
     console.error("Error getting the user's balance", e);
   }

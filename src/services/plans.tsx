@@ -50,22 +50,11 @@ export async function getAllPlans(uid: string) {
     const response = await axios.get(`${BASE_URL}/${uid}/data.json`);
     console.log("API - getPlans(): ", response.status, response.data);
     const plans: Plan[] = [];
-    if (response.data != null) {
+    response.data &&
       Object.keys(response.data).forEach((key: string) => {
         const planResponse = response.data[key];
-
-        plans.push(
-          new Plan(
-            planResponse.title,
-            planResponse.totalRequired,
-            planResponse.savings,
-            planResponse.category,
-            planResponse.deadline,
-            key,
-          ),
-        );
+        plans.push(Plan.fromObject(planResponse, key));
       });
-    }
 
     return plans;
   } catch (e) {
@@ -77,17 +66,13 @@ export async function getPlan(uid: string, pid: string) {
   try {
     const response = await axios.get(`${BASE_URL}/${uid}/data/${pid}.json`);
     console.log("API - getPlan(): ", response.status, response.data, "\n");
-
     const data = response.data;
 
-    return new Plan(
-      data.title,
-      data.totalRequired,
-      data.savings,
-      data.category,
-      data.deadline,
-      pid,
-    );
+    if (!data) {
+      throw Error("Plan not found");
+    }
+
+    return Plan.fromObject(data, pid);
   } catch (e) {
     console.error("API - getPlan(): ", e);
     throw e;

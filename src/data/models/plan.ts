@@ -16,4 +16,15 @@ export class Plan implements IPlan {
     public deadline: Date,
     public id?: string,
   ) {}
+
+  static fromObject(data: any, id: any) {
+    return new Plan(
+      data.title,
+      data.totalRequired,
+      data.savings,
+      data.category,
+      data.deadline,
+      data.id ?? id,
+    );
+  }
 }
