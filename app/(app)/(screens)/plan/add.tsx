@@ -1,7 +1,7 @@
 import RNDateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
-import { Button, Input } from "@rneui/themed";
+import { Input } from "@rneui/themed";
 import { useState } from "react";
 import {
   View,
@@ -14,11 +14,11 @@ import DropDownPicker, {
   ItemType,
   ValueType,
 } from "react-native-dropdown-picker";
-import { addPlan } from "../../services/plans";
 import { useSelector } from "react-redux";
-import { selectUser } from "../../store/session_slice";
-import { Plan } from "../../data/models/plan";
-import { BTButton } from "../../components/globals/button";
+import { BTButton } from "../../../../src/components/globals/button";
+import { Plan } from "../../../../src/data/models/plan";
+import { addPlan } from "../../../../src/services/plans";
+import { selectUser } from "../../../../src/store/session_slice";
 
 function AddPlanScreen({}) {
   const items: ItemType<string>[] = [

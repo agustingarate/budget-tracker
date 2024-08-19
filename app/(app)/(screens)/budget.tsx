@@ -1,10 +1,10 @@
 import { View, Text, FlatList, StyleSheet } from "react-native";
-import { Transaction } from "../../data/models/budget";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { TransactionType } from "../../data/types";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { selectBudget } from "../../store/budget_slice";
+import { Transaction } from "../../../src/data/models/budget";
+import { TransactionType } from "../../../src/data/types";
+import { selectBudget } from "../../../src/store/budget_slice";
 
 function BudgetDetailScreen() {
   const [transactions, setTransactions] = useState<Transaction[]>();

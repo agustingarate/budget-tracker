@@ -8,6 +8,12 @@ export default {
     orientation: "portrait",
     icon: "./assets/icon.png",
     userInterfaceStyle: "light",
+    scheme: IS_PROD
+      ? "com.agarate.budget_tracker"
+      : "com.agarate.budget_tracker.stg",
+    experiments: {
+      typedRoutes: true,
+    },
     splash: {
       image: "./assets/splash.png",
       resizeMode: "contain",
@@ -30,8 +36,10 @@ export default {
     },
     web: {
       favicon: "./assets/favicon.png",
+      bundler: "metro",
     },
     plugins: [
+      "expo-router",
       [
         "expo-font",
         {

@@ -1,7 +1,7 @@
 {
   "name": "budget-tracker",
   "version": "1.0.0",
-  "main": "expo/AppEntry.js",
+  "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
@@ -36,7 +36,10 @@
     "expo-dev-client": "~4.0.22",
     "react-native-web": "~0.19.10",
     "react-dom": "^18.2.0",
-    "@expo/metro-runtime": "~3.2.3"
+    "@expo/metro-runtime": "~3.2.3",
+    "expo-router": "~3.5.23",
+    "expo-linking": "~6.3.1",
+    "expo-constants": "~16.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

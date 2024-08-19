@@ -1,28 +1,31 @@
 import { View, Text, StyleSheet, ScrollView } from "react-native";
-import PlanCard from "../../../components/plan/plan_card";
-import { PlanCardEnum } from "../../../data/enums";
-import Metrics from "../../../theme/metrics";
+
 import { useEffect, useState } from "react";
-import AddBalance from "../../../components/balance/add_balance";
 import { Button } from "@rneui/base";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { HomeTabScreenProps } from "../../../navigation/types";
 import { useDispatch, useSelector } from "react-redux";
-import { selectUser } from "../../../store/session_slice";
-import { getBalance } from "../../../services/balance";
-import Balance from "../../../data/models/budget";
-import BalanceComponent from "../../../components/balance/balance";
-import { useIsFocused, useLinkTo } from "@react-navigation/native";
-import { updateBudget } from "../../../store/budget_slice";
-import { getAllPlans } from "../../../services/plans";
-import { Plan } from "../../../data/models/plan";
 
-function HomeScreen({ navigation }: HomeTabScreenProps<"Home">) {
+import { useIsFocused } from "@react-navigation/native";
+import AddBalance from "../../../src/components/balance/add_balance";
+import BalanceComponent from "../../../src/components/balance/balance";
+import PlanCard from "../../../src/components/plan/plan_card";
+import { PlanCardEnum } from "../../../src/data/enums";
+import Balance from "../../../src/data/models/budget";
+import { Plan } from "../../../src/data/models/plan";
+import { getBalance } from "../../../src/services/balance";
+import { getAllPlans } from "../../../src/services/plans";
+import { updateBudget } from "../../../src/store/budget_slice";
+import { selectUser } from "../../../src/store/session_slice";
+import Metrics from "../../../src/theme/metrics";
+import { useRouter } from "expo-router";
+
+function HomeScreen() {
   const [balance, setBalance] = useState<Balance>();
   const [plans, setPlans] = useState<Plan[]>();
 
   // const { onPress, ...props } = useLinkProps();
-  const linkTo = useLinkTo();
+  // const linkTo = useLinkTo(); //React navigation with web
+  const router = useRouter(); //Expo router
 
   const [modalProperties, setModalProperties] = useState<{
     visible: boolean;
@@ -36,7 +39,7 @@ function HomeScreen({ navigation }: HomeTabScreenProps<"Home">) {
 
   const userSelect = useSelector(selectUser);
 
-  const isFocused = useIsFocused();
+  // const isFocused = useIsFocused();
   const uid = userSelect.uid;
 
   async function handleBalance() {
@@ -55,15 +58,11 @@ function HomeScreen({ navigation }: HomeTabScreenProps<"Home">) {
   }
 
   useEffect(() => {
-    if (isFocused && uid) {
-      handleBalance();
-    }
+    handleBalance();
   }, []);
 
   useEffect(() => {
-    if (isFocused && uid) {
-      handlePlans();
-    }
+    handlePlans();
   }, []);
 
   function onPressModifyBudget(mode: "add" | "remove") {
@@ -94,12 +93,15 @@ function HomeScreen({ navigation }: HomeTabScreenProps<"Home">) {
 
   function createNewPlanHandler() {
     // navigation.navigate("AddPlanScreen");
-    linkTo("/addPlan");
+    // linkTo("/addPlan");
+    router.push("/plan/add");
   }
 
   function onPressBudgetDetails() {
     // navigation.navigate("PlanDetailScreen");
-    linkTo("/budgetDetails");
+    // linkTo("/budgetDetails");
+    //
+    router.push("/(app)/budget");
   }
 
   return (

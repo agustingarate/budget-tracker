@@ -8,15 +8,17 @@ import {
   Alert,
   GestureResponderEvent,
 } from "react-native";
-import CustomTextInput from "../../components/auth/custom_input";
-import { Button } from "@rneui/themed";
-import { auth } from "../../services/auth";
-import { AuthMode } from "../../data/enums";
-import { AccountDataType } from "../../data/types";
-import { useDispatch } from "react-redux";
-import { set } from "../../store/session_slice";
 
-export default function SignUpScreen() {
+import { Button } from "@rneui/themed";
+
+import { useDispatch } from "react-redux";
+import CustomTextInput from "../../src/components/auth/custom_input";
+import { AuthMode } from "../../src/data/enums";
+import { AccountDataType } from "../../src/data/types";
+import { auth } from "../../src/services/auth";
+import { set } from "../../src/store/session_slice";
+
+export default function signup() {
   const initAccountData: AccountDataType = {
     email: "",
     password: "",

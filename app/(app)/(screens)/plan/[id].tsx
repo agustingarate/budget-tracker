@@ -1,15 +1,17 @@
 import { View, Text } from "react-native";
-import { RootStackScreenProps } from "../../navigation/types";
 import { useLayoutEffect, useState } from "react";
-import { Plan } from "../../data/models/plan";
-import { getPlan } from "../../services/plans";
-import { useSelector } from "react-redux";
-import { selectUser } from "../../store/session_slice";
 
-function PlanDetailScreen({ route }: RootStackScreenProps<"PlanDetail">) {
-  const id = route.params.id;
+import { useSelector } from "react-redux";
+
+import { useLocalSearchParams } from "expo-router";
+import { Plan } from "../../../../src/data/models/plan";
+import { getPlan } from "../../../../src/services/plans";
+import { selectUser } from "../../../../src/store/session_slice";
+
+function PlanDetailScreen() {
   const [plan, setPlan] = useState<Plan>();
   const userSelector = useSelector(selectUser);
+  const { id } = useLocalSearchParams<{ id: string }>();
   const uid = userSelector.uid;
 
   async function handleGetPlan() {

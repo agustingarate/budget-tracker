@@ -1,13 +1,17 @@
 import { StyleSheet, View } from "react-native";
-import { BTButton } from "../../../components/globals/button";
+
 import { useDispatch, useSelector } from "react-redux";
-import { clearSession, selectUser } from "../../../store/session_slice";
+import { BTButton } from "../../../src/components/globals/button";
+import { selectUser, clearSession } from "../../../src/store/session_slice";
+import { useRouter } from "expo-router";
 
 function SettingsScreen() {
   const sessionSelector = useSelector(selectUser);
+  const router = useRouter();
   const sessionDispatch = useDispatch();
   function onCloseSession() {
     sessionDispatch(clearSession());
+    router.replace("/signin");
   }
 
   return (

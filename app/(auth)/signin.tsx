@@ -1,26 +1,19 @@
-import { Button, Input } from "@rneui/themed";
-import {
-  View,
-  StyleSheet,
-  Text,
-  Pressable,
-  GestureResponderEvent,
-} from "react-native";
-import CustomTextInput from "../../components/auth/custom_input";
-import {
-  RootStackParamList,
-  RootStackScreenProps,
-} from "../../navigation/types";
-import { useState } from "react";
-import { AccountDataType } from "../../data/types";
-import { auth } from "../../services/auth";
-import { AuthMode } from "../../data/enums";
-import { useDispatch } from "react-redux";
-import { store } from "../../store/store";
-import { set } from "../../store/session_slice";
-import { useLinkTo } from "@react-navigation/native";
+import { Button } from "@rneui/themed";
+import { View, StyleSheet, Text, Pressable } from "react-native";
 
-function LoginScreen({ navigation, route }: RootStackScreenProps<"Login">) {
+import { useState } from "react";
+
+import { useDispatch } from "react-redux";
+
+import { useLinkTo } from "@react-navigation/native";
+import CustomTextInput from "../../src/components/auth/custom_input";
+import { AuthMode } from "../../src/data/enums";
+import { AccountDataType } from "../../src/data/types";
+import { auth } from "../../src/services/auth";
+import { set } from "../../src/store/session_slice";
+import { useRouter } from "expo-router";
+
+function login() {
   const initAccountData: AccountDataType = {
     email: "",
     password: "",
@@ -28,7 +21,8 @@ function LoginScreen({ navigation, route }: RootStackScreenProps<"Login">) {
 
   // const count = useSelector(selectCount);
   const dispatch = useDispatch();
-  const linkTo = useLinkTo();
+  // const linkTo = useLinkTo(); //React navigation for web
+  const router = useRouter(); //Expo router
 
   const [accountData, setAccountData] =
     useState<AccountDataType>(initAccountData);
@@ -44,7 +38,8 @@ function LoginScreen({ navigation, route }: RootStackScreenProps<"Login">) {
   }
 
   function navigateToSignUp(): void {
-    linkTo("/signup");
+    // linkTo("/signup");
+    router.navigate("/signup");
   }
 
   async function onPressHandler() {
@@ -56,6 +51,7 @@ function LoginScreen({ navigation, route }: RootStackScreenProps<"Login">) {
         AuthMode.signIn,
       );
       dispatch(set({ token: user.token, uid: user.id })); // Dispatch the action with the token
+      router.replace("/");
     } catch (error) {
       console.log("Login error:", error); // Handle errors
     }
@@ -142,4 +138,4 @@ const styles = StyleSheet.create({
     backgroundColor: "#0cdc8c",
   },
 });
-export default LoginScreen;
+export default login;

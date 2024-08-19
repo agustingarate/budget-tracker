@@ -5,6 +5,7 @@ import Metrics from "../../theme/metrics";
 import { LinearProgress } from "@rneui/themed/dist/LinearProgress";
 import { useLinkTo, useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
+import { useRouter } from "expo-router";
 
 type PlanCardProps = {
   type?: PlanCardEnum | null;
@@ -30,10 +31,12 @@ function PlanCard({
     setSavingProgress(savingsProgress);
   }, []);
 
-  const linkTo = useLinkTo();
+  // const linkTo = useLinkTo();
+  const router = useRouter();
 
   function onTap() {
-    linkTo(`/planDetails/${id}`);
+    // linkTo(`/planDetails/${id}`);
+    router.push(`/(app)/plan/${id}`);
   }
   function ProgressWidget() {
     switch (type!) {

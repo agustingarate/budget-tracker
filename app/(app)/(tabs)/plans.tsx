@@ -1,12 +1,12 @@
-import { View, Text, StyleSheet } from "react-native";
-import PlanCard from "../../components/plan/plan_card";
-import { PlanCardEnum } from "../../data/enums";
-import { FlatList, GestureHandlerRootView } from "react-native-gesture-handler";
-import { useEffect, useState } from "react";
-import { Plan } from "../../data/models/plan";
-import { getAllPlans } from "../../services/plans";
+import { useState, useEffect } from "react";
+import { View, FlatList, StyleSheet } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
-import { selectUser } from "../../store/session_slice";
+import PlanCard from "../../../src/components/plan/plan_card";
+import { PlanCardEnum } from "../../../src/data/enums";
+import { Plan } from "../../../src/data/models/plan";
+import { getAllPlans } from "../../../src/services/plans";
+import { selectUser } from "../../../src/store/session_slice";
 
 function PlansListScreen() {
   const [plans, setPlans] = useState<Plan[]>([]);
@@ -33,6 +33,7 @@ function PlansListScreen() {
                 type={PlanCardEnum.list}
                 currentAmount={plan.item.savings}
                 total={plan.item.totalRequired}
+                id={plan.item.id}
               />
             </View>
           )}
