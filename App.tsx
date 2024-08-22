@@ -2,6 +2,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet } from "react-native";
+import * as Linking from "expo-linking";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import LoginScreen from "./src/screens/auth/login_screen";
@@ -21,11 +22,27 @@ import { Provider, useSelector } from "react-redux";
 import { persistor, store } from "./src/store/store";
 import { selectUser } from "./src/store/session_slice";
 import { PersistGate } from "redux-persist/integration/react";
+
 import BudgetDetailScreen from "./src/screens/budget/budget_detail_screen";
 import NotFound from "./src/screens/error/not_found/not_found";
 
+const prefix = Linking.createURL("");
+
+/* 
+For testing purposes:
+
+
+
+npx uri-scheme open budgettrackerstg://budgetDetails --android 
+OR
+npx uri-scheme open budgettrackerstg://budgetDetails --ios
+
+*/
+
+console.log("prefix", prefix);
+
 const linking = {
-  prefixes: [],
+  prefixes: [prefix], //from scheme property in app.config.js
   config: {
     screens: {
       Login: "login",
