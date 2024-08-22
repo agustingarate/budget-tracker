@@ -3,6 +3,7 @@ const IS_PROD = process.env.APP_VARIANT === "production";
 export default {
   expo: {
     name: IS_PROD ? "budget-tracker" : "budget-tracker STG",
+    scheme: IS_PROD ? "budgettracker" : "budgettrackerstg",
     slug: "budget-tracker",
     version: "1.0.0",
     orientation: "portrait",
