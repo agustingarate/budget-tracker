@@ -1,7 +1,10 @@
-import { NavigationContainer } from "@react-navigation/native";
+import {
+  createNavigationContainerRef,
+  NavigationContainer,
+} from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet } from "react-native";
+import { EmitterSubscription, StyleSheet } from "react-native";
 import * as Linking from "expo-linking";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -10,7 +13,11 @@ import SignUpScreen from "./src/screens/auth/sign_up_screen";
 import HomeScreen from "./src/screens/root/home/home_screen";
 import SearchScreen from "./src/screens/root/search/search_screen";
 import SettingsScreen from "./src/screens/root/settings/settings_screen";
-import { HomeTabParamList, RootStackParamList } from "./src/navigation/types";
+import {
+  HomeTabParamList,
+  PlanDetailsScreenParams,
+  RootStackParamList,
+} from "./src/navigation/types";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
@@ -26,23 +33,18 @@ import { PersistGate } from "redux-persist/integration/react";
 import BudgetDetailScreen from "./src/screens/budget/budget_detail_screen";
 import NotFound from "./src/screens/error/not_found/not_found";
 
-const prefix = Linking.createURL("");
-
 /* 
 For testing purposes:
 
 
-
-npx uri-scheme open budgettrackerstg://budgetDetails --android 
+npx uri-scheme open "budgettrackerstg://planDetails/-O4Az5senPHzbWQlxm_c?example=5" --android
 OR
-npx uri-scheme open budgettrackerstg://budgetDetails --ios
+npx uri-scheme open "budgettrackerstg://planDetails/-O4Az5senPHzbWQlxm_c?example=5" --ios
 
 */
 
-console.log("prefix", prefix);
-
 const linking = {
-  prefixes: [prefix], //from scheme property in app.config.js
+  prefixes: [],
   config: {
     screens: {
       Login: "login",
@@ -61,6 +63,8 @@ const linking = {
 export default function App() {
   const Stack = createNativeStackNavigator<RootStackParamList>();
   const BottomTab = createBottomTabNavigator<HomeTabParamList>();
+
+  const navigationRef = createNavigationContainerRef();
 
   function LoginNavigator() {
     return (
@@ -140,6 +144,13 @@ export default function App() {
     "Nunito-Medium": require("./assets/fonts/Nunito-Medium.ttf"),
     "Nunito-Regular": require("./assets/fonts/Nunito-Regular.ttf"),
   });
+  useEffect(() => {
+    const subscription = Linking.addEventListener("url", handleDeepLink);
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
 
   useEffect(() => {
     if (loaded || error) {
@@ -151,11 +162,24 @@ export default function App() {
     return null;
   }
 
+  function handleDeepLink({ url }: { url: string }) {
+    const { scheme, hostname, path, queryParams } = Linking.parse(url);
+
+    switch (hostname) {
+      case "planDetails":
+        path &&
+          navigationRef.navigate("PlanDetail", {
+            id: path,
+            ...queryParams,
+          } as PlanDetailsScreenParams);
+    }
+  }
+
   function Screens() {
     const token = useSelector(selectUser).token;
 
     return (
-      <NavigationContainer linking={linking}>
+      <NavigationContainer linking={linking} ref={navigationRef}>
         <StatusBar style="dark" />
         {!token && <LoginNavigator />}
         {token && (

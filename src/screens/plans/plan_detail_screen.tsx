@@ -8,6 +8,7 @@ import { selectUser } from "../../store/session_slice";
 
 function PlanDetailScreen({ route }: RootStackScreenProps<"PlanDetail">) {
   const id = route.params.id;
+  const example = route.params.example;
   const [plan, setPlan] = useState<Plan>();
   const userSelector = useSelector(selectUser);
   const uid = userSelector.uid;

@@ -5,6 +5,11 @@ import type {
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 
+export type PlanDetailsScreenParams = {
+  id: string;
+  example: number;
+};
+
 export type RootStackParamList = {
   // Home: NavigatorScreenParams<HomeTabParamList>;
   // PostDetails: { id: string };
@@ -14,9 +19,7 @@ export type RootStackParamList = {
   Login: undefined;
   SignUp: undefined;
   AddPlan: undefined;
-  PlanDetail: {
-    id: string;
-  };
+  PlanDetail: PlanDetailsScreenParams;
   BudgetDetail: undefined;
   NotFound: undefined;
 };

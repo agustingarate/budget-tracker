@@ -21,7 +21,6 @@ function HomeScreen({ navigation }: HomeTabScreenProps<"Home">) {
   const [balance, setBalance] = useState<Balance>();
   const [plans, setPlans] = useState<Plan[]>();
 
-  // const { onPress, ...props } = useLinkProps();
   const linkTo = useLinkTo();
 
   const [modalProperties, setModalProperties] = useState<{
