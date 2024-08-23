@@ -29,7 +29,7 @@ import NotFound from "./src/screens/error/not_found/not_found";
 const prefix = Linking.createURL("");
 
 /* 
-For testing purposes:
+For testing purposes, build in developer mode and run:
 
 
 
