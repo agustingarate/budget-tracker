@@ -30,12 +30,16 @@ const linking = {
     screens: {
       Login: "login",
       SignUp: "signup",
+      Root: {
+        path: "",
+        // Home: "home",
+        // Search: "search",
+        // plans: "plans",
+        // settings: "settings",
+      },
       AddPlan: "addPlan",
       PlanDetail: "planDetails/:id",
       BudgetDetail: "budgetDetails",
-      Root: {
-        path: "",
-      },
       NotFound: "*",
     },
   },
